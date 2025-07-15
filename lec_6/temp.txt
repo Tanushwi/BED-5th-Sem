@@ -1,10 +1,9 @@
-Hello,G27gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-hnvbnnnnnnn,,,,,,,,mjnnnnnnnnnnnnnnnn
-I,am,writing,b,,,,,,,,,fileaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Hello G27gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+hnvbnnnnnnn        mjnnnnnnnnnnnnnnnnI am writing b         fileaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 vvvvv
 
 
 
 
 
-vbgvvvvvvv,b
+vbgvvvvvvv b
