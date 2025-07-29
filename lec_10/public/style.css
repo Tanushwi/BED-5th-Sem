@@ -1,0 +1,61 @@
+    body {
+      background: #f2f2f2;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      width: 400px;
+      background-color: #fff;
+      padding: 30px;
+      margin: 80px auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .gender {
+      margin-bottom: 20px;
+    }
+
+    .gender label {
+      font-weight: normal;
+      margin-right: 10px;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }

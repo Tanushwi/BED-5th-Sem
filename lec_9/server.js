@@ -4,7 +4,7 @@ const app=express();
 app.use(express.json());
 
 app.get("/",(req,res)=>{
-    res.send("Server created");
+    res.sendFile("./index.html")
 })
 
 app.post("/data", (req, res) => {
