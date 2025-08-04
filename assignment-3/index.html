@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do List using DOM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px;
+    }
+    #displayBox {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+      padding: 10px;
+      min-height: 100px;
+      width: 350px;
+    }
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 5px 0;
+      padding: 5px;
+      background-color: #f9f9f9;
+    }
+    .todo-text {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+    .action-btn {
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>To-Do List</h2>
+
+  <input type="text" id="inputBox" placeholder="Enter title">
+  <button id="addBtn">Add</button>
+
+  <div id="displayBox"></div>
+
+  <script src="index.js"></script>
+
+</body>
+</html>
