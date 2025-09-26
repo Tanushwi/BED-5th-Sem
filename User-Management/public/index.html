@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .auth-form {
+            display: none;
+        }
+        .active-form {
+            display: block;
+        }
+        input {
+            padding: 12px;
+            margin: 10px 0;
+            width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        button {
+            padding: 12px;
+            margin: 15px 0;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .toggle-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #007bff;
+        }
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            background: white;
+            color: #007bff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .toggle-btn.active {
+            background: #007bff;
+            color: white;
+        }
+        .toggle-btn:not(.active):hover {
+            background: #f8f9fa;
+        }
+        .user-section {
+            display: none;
+        }
+        .user-info {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        .user-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: white;
+        }
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .logout-btn {
+            background: #dc3545;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        .edit-btn {
+            background: #28a745;
+            margin-right: 10px;
+            width: auto;
+        }
+        .edit-btn:hover {
+            background: #218838;
+        }
+        .delete-btn {
+            background: #dc3545;
+            width: auto;
+        }
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        .action-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        .management-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .management-buttons button {
+            width: 100%;
+        }
+        .edit-form {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #ffeaa7;
+        }
+        .form-title {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .user-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="authSection">
+            <h1>User Management System</h1>
+            
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" onclick="showLogin()">Login</button>
+                <button class="toggle-btn" onclick="showRegister()">Register</button>
+            </div>
+
+            <div id="loginForm" class="auth-form active-form">
+                <h2 class="form-title">Login to Your Account</h2>
+                <input type="email" id="loginEmail" placeholder="Email Address" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button onclick="login()" id="loginBtn">Sign In</button>
+            </div>
+
+            <div id="registerForm" class="auth-form">
+                <h2 class="form-title">Create New Account</h2>
+                <input type="text" id="regName" placeholder="Full Name" required>
+                <input type="email" id="regEmail" placeholder="Email Address" required>
+                <input type="password" id="regPassword" placeholder="Password" required>
+                <input type="number" id="regAge" placeholder="Age (Optional)">
+                <button onclick="register()" id="regBtn">Create Account</button>
+            </div>
+        </div>
+
+        <div class="user-section" id="userSection">
+            <div class="user-info" id="currentUserInfo"></div>
+            
+            <h2>User Management Dashboard</h2>
+            
+            <div class="management-buttons">
+                <button onclick="getCurrentUser()">👤 My Profile</button>
+                <button onclick="getAllUsers()">👥 View All Users</button>
+                <button onclick="showUpdateForm()">✏️ Update My Details</button>
+                <button onclick="logout()" class="logout-btn">🚪 Logout</button>
+            </div>
+
+            <div id="updateForm" class="edit-form" style="display:none;">
+                <h3>Update My Profile</h3>
+                <input type="text" id="updateName" placeholder="New Name">
+                <input type="number" id="updateAge" placeholder="New Age">
+                <div class="action-buttons">
+                    <button onclick="updateCurrentUser()" class="edit-btn">💾 Save Changes</button>
+                    <button onclick="hideUpdateForm()" class="logout-btn">❌ Cancel</button>
+                </div>
+            </div>
+            
+            <div id="usersList"></div>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let allUsers = [];
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
+            setTimeout(() => messageDiv.innerHTML = '', 5000);
+        }
+
+        function setLoading(buttonId, isLoading) {
+            const button = document.getElementById(buttonId);
+            if (button) {
+                button.disabled = isLoading;
+                button.textContent = isLoading ? 'Loading...' : 
+                    buttonId === 'regBtn' ? 'Create Account' : 'Sign In';
+            }
+        }
+
+        function showLogin() {
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.toggle-btn').classList.add('active');
+
+            document.getElementById('loginForm').classList.add('active-form');
+            document.getElementById('registerForm').classList.remove('active-form');
+
+            document.getElementById('authSection').style.display = 'block';
+            document.getElementById('userSection').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('registerForm').classList.add('active-form');
+            document.getElementById('loginForm').classList.remove('active-form');
+            
+            document.getElementById('authSection').style.display = 'block';
+            document.getElementById('userSection').style.display = 'none';
+        }
+
+        function showUserSection() {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('userSection').style.display = 'block';
+        }
+
+        async function register() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const age = document.getElementById('regAge').value;
+
+            if (!name || !email || !password) {
+                showMessage('Please fill all required fields', 'error');
+                return;
+            }
+
+            setLoading('regBtn', true);
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ 
+                        name, 
+                        email, 
+                        password, 
+                        age: age ? parseInt(age) : undefined 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('🎉 Registration successful! Welcome to the system.', 'success');
+                    currentUser = data.user;
+                    showUserSection();
+                    updateCurrentUserInfo();
+                    showMessage('✅ Profile loaded successfully! You can now view and manage your details.', 'success');
+                    clearAuthForms();
+                } else {
+                    showMessage('❌ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Error during registration: ' + error.message, 'error');
+            } finally {
+                setLoading('regBtn', false);
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showMessage('Please fill all fields', 'error');
+                return;
+            }
+
+            setLoading('loginBtn', true);
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('✅ Login successful! Welcome back.', 'success');
+                    currentUser = data.user;
+                    showUserSection();
+                    updateCurrentUserInfo();
+                    clearAuthForms();
+                } else {
+                    showMessage('❌ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Error during login: ' + error.message, 'error');
+            } finally {
+                setLoading('loginBtn', false);
+            }
+        }
+
+        async function logout() {
+            try {
+                currentUser = null;
+                allUsers = [];
+                document.getElementById('usersList').innerHTML = '';
+                document.getElementById('currentUserInfo').innerHTML = '';
+                document.getElementById('updateForm').style.display = 'none';
+
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    showMessage('👋 Logout successful!', 'success');
+                } else {
+                    console.log('Backend logout failed, but proceeding with local logout');
+                }
+
+                showLogin();
+
+            } catch (error) {
+                console.error('Logout error:', error);
+                showLogin();
+            }
+        }
+
+        async function getCurrentUser() {
+            try {
+                const response = await fetch('/api/auth/current', {
+                    credentials: 'include'
+                });
+                const user = await response.json();
+                
+                if (response.ok) {
+                    currentUser = user;
+                    updateCurrentUserInfo();
+                    showMessage('✅ Profile loaded successfully!', 'success');
+                } else {
+                    showMessage('❌ ' + user.error, 'error');
+                    if (response.status === 401) {
+                        showLogin();
+                    }
+                }
+            } catch (error) {
+                showMessage('❌ Error fetching profile', 'error');
+            }
+        }
+
+        function updateCurrentUserInfo() {
+            if (currentUser) {
+                const userInfoDiv = document.getElementById('currentUserInfo');
+                userInfoDiv.innerHTML = `
+                    <h3>👤 Welcome, ${currentUser.name}!</h3>
+                    <div class="user-details">
+                        <p><strong>📧 Email:</strong> ${currentUser.email}</p>
+                        <p><strong>🎂 Age:</strong> ${currentUser.age || 'Not specified'}</p>
+                        <p><strong>🆔 User ID:</strong> ${currentUser.id || currentUser._id}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function showUpdateForm() {
+            document.getElementById('updateForm').style.display = 'block';
+            document.getElementById('updateName').value = currentUser.name;
+            document.getElementById('updateAge').value = currentUser.age || '';
+        }
+
+        function hideUpdateForm() {
+            document.getElementById('updateForm').style.display = 'none';
+        }
+
+        async function updateCurrentUser() {
+            const name = document.getElementById('updateName').value;
+            const age = document.getElementById('updateAge').value;
+
+            if (!name) {
+                showMessage('Name is required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/users/${currentUser.id || currentUser._id}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ 
+                        name, 
+                        age: age ? parseInt(age) : undefined 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentUser = data.user;
+                    updateCurrentUserInfo();
+                    hideUpdateForm();
+                    showMessage('✅ Profile updated successfully!', 'success');
+                    if (allUsers.length > 0) {
+                        getAllUsers();
+                    }
+                } else {
+                    showMessage('❌ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Error updating profile: ' + error.message, 'error');
+            }
+        }
+
+        async function getAllUsers() {
+            try {
+                const response = await fetch('/api/users', {
+                    credentials: 'include'
+                });
+                const users = await response.json();
+                
+                if (response.ok) {
+                    allUsers = users;
+                    displayUsers(users);
+                    showMessage(`✅ Loaded ${users.length} user(s)`, 'success');
+                } else {
+                    showMessage('❌ ' + users.error, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Error fetching users: ' + error.message, 'error');
+            }
+        }
+
+        function displayUsers(users) {
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = '<h3>👥 All Registered Users</h3>';
+            
+            if (users.length === 0) {
+                usersList.innerHTML += '<p>No users found in the system.</p>';
+            } else {
+                users.forEach(user => {
+                    const isCurrentUser = (user._id === (currentUser.id || currentUser._id));
+                    usersList.innerHTML += `
+                        <div class="user-card" id="user-${user._id}">
+                            <p><strong>👤 Name:</strong> ${user.name}</p>
+                            <p><strong>📧 Email:</strong> ${user.email}</p>
+                            <p><strong>🎂 Age:</strong> ${user.age || 'Not specified'}</p>
+                            <p><strong>🆔 ID:</strong> ${user._id}</p>
+                            <div class="action-buttons">
+                                ${isCurrentUser ? 
+                                    '<span style="color: #28a745; font-weight: bold;">✓ This is you</span>' : 
+                                    `<button class="delete-btn" onclick="deleteUser('${user._id}', '${user.name}')">🗑️ Delete User</button>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        async function deleteUser(userId, userName) {
+            if (!confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/users/${userId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage(`✅ User "${userName}" deleted successfully!`, 'success');
+                    document.getElementById(`user-${userId}`).remove();
+                    allUsers = allUsers.filter(user => user._id !== userId);
+                    
+                    if (allUsers.length === 0) {
+                        document.getElementById('usersList').innerHTML = '<h3>👥 All Registered Users</h3><p>No users found in the system.</p>';
+                    }
+                } else {
+                    showMessage('❌ ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Error deleting user: ' + error.message, 'error');
+            }
+        }
+
+        function clearAuthForms() {
+            document.getElementById('regName').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regPassword').value = '';
+            document.getElementById('regAge').value = '';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        async function checkLoginStatus() {
+            try {
+                const response = await fetch('/api/auth/current', {
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    const user = await response.json();
+                    currentUser = user;
+                    showUserSection();
+                    updateCurrentUserInfo();
+                }
+            } catch (error) {
+                console.log('User not logged in - showing login form');
+                showLogin(); 
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html>
