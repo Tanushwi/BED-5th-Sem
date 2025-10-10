@@ -2,6 +2,8 @@ const { WebSocketServer } = require('ws');
 const wss = new WebSocketServer({ port: 8088 });
 
 
+
+
 //rooms functionality
 let rooms=new Map();
 // {
@@ -17,8 +19,10 @@ wss.on('connection', function(socket){
         parseMessage = JSON.parse(message);
         if(parseMessage.type==="join" && parseMessage.Payload && parseMessage.Payload.roomId){
             let roomId=parseMessage.Payload.roomId;
+            console.log(rooms)
             if(!rooms.get(roomId)){
-                rooms.set(roomId,new Set())
+                // rooms.set(roomId,new Set())
+                return socket.send("room doesn't exist")
             }
             rooms.get(roomId).add(socket)
             socket.roomId=roomId;
@@ -32,6 +36,13 @@ wss.on('connection', function(socket){
             allclients.forEach(s=>{
                 s.send(message)
             });
+        }
+        else if(parseMessage.type==="create"){
+            // create a room id and send it to user using uuid
+            let roomId=Math.floor(Math.random()*100000000).toString();
+            rooms.set(roomId,new Set())
+            console.log(rooms)
+            socket.send(roomId)
         }
     })
 })
